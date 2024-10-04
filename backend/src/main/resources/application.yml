@@ -1,0 +1,24 @@
+keycloak:
+  realm: your-realm
+  resource: your-client-id
+  auth-server-url: http://localhost:8080
+  ssl-required: external
+  bearer-only: true
+  credentials:
+    secret: your-client-secret
+  use-resource-role-mappings: true
+
+spring:
+  application:
+    name: "bikememo"
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/your-database
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/your-realm
+
+server:
+  port: 8081
