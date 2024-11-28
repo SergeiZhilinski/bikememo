@@ -1,6 +1,7 @@
 package com.sz.bikememoback.models;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.sz.bikememoback.dtos.CreateNotationMessage;
 import com.sz.bikememoback.dtos.NotationMessage;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -57,5 +58,18 @@ public class Notation {
                 message.comments()
         );
     }
+    public static Notation create(CreateNotationMessage message) {
+        return new Notation(
+                null,
+                message.fullPicture(),
+                message.croppedPicture(),
+                message.title(),
+                message.description(),
+                message.dateOfCreation(),
+                message.dateOfUpdate(),
+                new ArrayList<>()
+        );
+    }
+
 }
 

@@ -39,12 +39,13 @@ public class CommentService {
     }
 
     public Comment createComment(Comment comment) {
-        System.out.println("notation id :" + comment.getNotation().getId());
+        Comment finalComment = comment;
         Notation notation = notationRepository.findById(comment.getNotation().getId())
-                .orElseThrow(() -> new NotationNotFoundException(comment.getNotation().getId()));
+                .orElseThrow(() -> new NotationNotFoundException(finalComment.getNotation().getId()));
         comment.setOrderOfComment(notation.getComments().size());
         notation.addComment(comment);
         notationRepository.save(notation);
+        comment = commentRepository.save(comment);
         return comment;
     }
 
@@ -65,7 +66,7 @@ public class CommentService {
                 }).orElseThrow(() -> new CommentNotFoundException(updatedComment.getId()));
     }
 
-    public void deleteComment(Long notationId, String commentId) {
+    public void deleteComment(Long notationId, Long commentId) {
         Notation notation = notationRepository.findById(notationId)
                 .orElseThrow(() -> new NotationNotFoundException(notationId));
         notation.getComments().removeIf(comment -> comment.getId().equals(commentId));

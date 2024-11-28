@@ -1,7 +1,8 @@
 package com.sz.bikememoback.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.sz.bikememoback.dtos.CommentMessage;
+import com.sz.bikememoback.dtos.comment.RequestCommentMessage;
+import com.sz.bikememoback.dtos.comment.CreateCommentMessage;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -33,11 +34,25 @@ public class Comment {
         return ("id: "+ id +", notification: "+notation.getId() + ", title "+ commentTitle +", description "+commentText +", date "+dateOfCreation +", date "+dateOfUpdate);
     }
 
-    public static Comment of(CommentMessage message) {
+    public static Comment of(RequestCommentMessage message) {
         Notation notation = new Notation();
         notation.setId(message.notationId());
         return new Comment(
                 message.id(),
+                notation,
+                message.orderOfComment(),
+                message.commentTitle(),
+                message.commentText(),
+                message.dateOfCreation(),
+                message.dateOfUpdate()
+        );
+    }
+
+    public static Comment create(CreateCommentMessage message) {
+        Notation notation = new Notation();
+        notation.setId(message.notationId());
+        return new Comment(
+                null,
                 notation,
                 message.orderOfComment(),
                 message.commentTitle(),

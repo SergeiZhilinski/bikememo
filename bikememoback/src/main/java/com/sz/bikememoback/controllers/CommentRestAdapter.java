@@ -1,6 +1,8 @@
 package com.sz.bikememoback.controllers;
 
-import com.sz.bikememoback.dtos.CommentMessage;
+import com.sz.bikememoback.dtos.comment.RequestCommentMessage;
+import com.sz.bikememoback.dtos.comment.ResponseCommentMessage;
+import com.sz.bikememoback.dtos.comment.CreateCommentMessage;
 import com.sz.bikememoback.models.Comment;
 import com.sz.bikememoback.services.CommentService;
 import lombok.RequiredArgsConstructor;
@@ -17,17 +19,26 @@ public class CommentRestAdapter {
 
     @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
-    public List<CommentMessage> getAllCommentsToNotation(@RequestParam Long id) {
-        return commentService.getCommentsByNotationId(id).stream().map(CommentMessage::of).toList();
+    public List<ResponseCommentMessage> getAllCommentsToNotation(@RequestParam Long id) {
+        return commentService.getCommentsByNotationId(id).stream().map(ResponseCommentMessage::of).toList();
     }
 
-    @PutMapping("/new")
+    @PutMapping("/")
     @ResponseStatus(HttpStatus.CREATED)
-    public CommentMessage createComment(@RequestBody CommentMessage commentMessage) {
-        return CommentMessage.of(commentService.createComment( Comment.of(commentMessage)));
+    public ResponseCommentMessage createComment(@RequestBody CreateCommentMessage commentMessage) {
+        return ResponseCommentMessage.of(commentService.createComment( Comment.create(commentMessage)));
     }
 
-    //TODO update, delete
+    @PostMapping("/")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseCommentMessage aditComment(@RequestBody RequestCommentMessage responseCommentMessage) {
+        return ResponseCommentMessage.of(commentService.createComment( Comment.of(responseCommentMessage)));
+    }
 
+    @DeleteMapping("/")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteComment(@RequestParam Long commentId, @RequestParam Long notationId) {
+        commentService.deleteComment(notationId, commentId);
+    }
 
 }

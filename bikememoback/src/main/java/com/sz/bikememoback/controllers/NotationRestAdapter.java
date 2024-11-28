@@ -1,5 +1,6 @@
 package com.sz.bikememoback.controllers;
 
+import com.sz.bikememoback.dtos.CreateNotationMessage;
 import com.sz.bikememoback.dtos.NotationMessage;
 import com.sz.bikememoback.models.Notation;
 import com.sz.bikememoback.services.NotationService;
@@ -25,7 +26,7 @@ public class NotationRestAdapter {
     @ResponseStatus(HttpStatus.OK)
     //@SecurityRequirement(name = "bearer-jwt")
     //@SecurityRequirement(name = "oauth2")
-    /*@Operation(
+    @Operation(
             tags = "notation",
             summary = "Alle Notitzen",
             description = "Gibt eine Liste aller Notitzen",
@@ -40,7 +41,7 @@ public class NotationRestAdapter {
                     @ApiResponse(responseCode = "400", description = "Fehlerhafte Anfrage",
                             content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ProblemDetail.class)))
             }
-    )*/
+    )
     public List<NotationMessage> getAllNotation() {
         //todo - return alle notitze per BenutzerId, id aus jwt
         return notationService.getAllNotations().stream().map(NotationMessage::of).toList();
@@ -70,7 +71,7 @@ public class NotationRestAdapter {
         return NotationMessage.of(notationService.getNotationById(id));
     }
 
-    @PutMapping("/")
+    @PostMapping("/")
     @ResponseStatus(HttpStatus.OK)
     //@SecurityRequirement(name = "bearer-jwt")
     //@SecurityRequirement(name = "oauth2")
@@ -94,7 +95,7 @@ public class NotationRestAdapter {
         return NotationMessage.of(notationService.updateNotation(Notation.of(notationMessage)));
     }
 
-    @PutMapping("/new")
+    @PutMapping("/")
     @ResponseStatus(HttpStatus.CREATED)
     //@SecurityRequirement(name = "bearer-jwt")
     //@SecurityRequirement(name = "oauth2")
@@ -114,8 +115,8 @@ public class NotationRestAdapter {
                             content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ProblemDetail.class)))
             }
     )
-    public NotationMessage createNotation(@RequestBody NotationMessage notationMessage) {
-        return NotationMessage.of(notationService.createNotation(Notation.of(notationMessage)));
+    public NotationMessage createNotation(@RequestBody CreateNotationMessage notationMessage) {
+        return NotationMessage.of(notationService.createNotation(Notation.create(notationMessage)));
     }
 
     @DeleteMapping("/")
